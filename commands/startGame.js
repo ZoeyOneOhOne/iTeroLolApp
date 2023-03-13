@@ -2,7 +2,7 @@ const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('addgame')
+		.setName('startgame')
 		.setDescription('Sets up a game for placing bets.')
         .addStringOption(option =>
             option.setName('team1')
@@ -51,8 +51,8 @@ module.exports = {
                 reaction1 = '1014887969808711800';
                 break;
             case 'G2 Esports':
-                teamMessage1 = '<:G2:1084955118098714707>' + ' ' + team1;
-                reaction1 = '1084955118098714707';
+                teamMessage1 = '<:G2:1014887970890842233>' + ' ' + team1;
+                reaction1 = '1014887970890842233';
                 break;
             case 'Team VItality':
                 teamMessage1 = '<:VIT:1012762647134994562>' + ' ' + team1;
