@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { teamList } = require('../teamList');
-const { Client, Collection, Events, GatewayIntentBits, messageLink } = require('discord.js');
+const { Client, GatewayIntentBits } = require('discord.js');
 const { token } = require('../config.json');
 
 

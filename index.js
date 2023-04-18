@@ -11,6 +11,9 @@ for (let team of teamList) {
 	teamIDs.push(team.reaction);
   }
 
+// Set up roles
+const roles = ['Founder', 'The Board', 'Community Manager', 'Botmaster', 'Staff', 'Deputy Mods'];
+
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions] });
 client.commands = new Collection();
@@ -59,6 +62,10 @@ client.on(Events.InteractionCreate, async interaction => {
 client.on('messageReactionAdd', (reaction, user) => {
 	if (!reaction.message?.reactions.cache.find(v => v.emoji.id === '1086474462834200687')) { // If the stop emoji doesnt yet exist
 		if (teamIDs.includes(reaction.emoji.id)) {
+			if (user.username !== 'IteroBetBot') {
+				console.log('Ya');
+				console.log(reaction.message.member.roles.cache.find(r => r.name = 'Bot Master'));
+			}
 			if(!reaction1) {
 				reaction1 = reaction.emoji.id;
 			} else if (!reaction2) {
