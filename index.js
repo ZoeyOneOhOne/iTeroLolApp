@@ -65,7 +65,7 @@ client.on('messageReactionAdd', (reaction, user) => {
 
 	}
 	if (reaction.emoji.id === '1086474462834200687') { //If stop emoji
-		if (user.id != '235113888973062155') { // If the user who added the stop emoji isnt Collin then remove it
+		if (user.id != '235113888973062155') { // If the user who added the stop emoji isnt Admin then remove it
 		reaction.message.reactions.cache.get('1086474462834200687').remove()
 			.catch(error => console.error('Failed to remove reactions:', error));
 
