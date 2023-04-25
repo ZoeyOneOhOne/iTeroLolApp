@@ -34,3 +34,5 @@ The `name` property is the *public* name that everyone will see. `value` is the 
  { name: 'Team Heretics', value: 'Team Heretics' },
  { name: 'Public Name', value: 'Private Name' },
  ````
+
+ Save and commit your changes.
