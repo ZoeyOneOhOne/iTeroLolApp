@@ -17,7 +17,20 @@ Create the new command file in the commands folder. Deploy the command using ```
 ## Adding new teams
 
 ### Step 1
-In the `teamList.js` file add the `name`, `reaction`, and `emoji` maintaining the format. It's easiest to just copy the last team object and paste it below then just swap the values (make sure the bottom object has a comma at the end). The `reaction` property is the team logo emoji ID without it's taggs. This is necessary becasue an emoji in a message and an emoji in a reaction are not the same.
+In the `teamList.js` file add the `name`, `value`, `reaction`, and `emoji` maintaining the format:
+````
+{ name: 'KOI', value: 'KOI', reaction: '1065285604578959430', emoji: '<:KOI:1065285604578959430>'},
+{ name: 'MAD Lions', value: 'MAD Lions', reaction: '1014887972266578000', emoji: '<:MAD:1014887972266578000>'},
+{ name: 'Team Heretics', value: 'Team Heretics', reaction: '1065287618939600917', emoji: '<:TH:1065287618939600917>'},
+{ name: 'Public Name', value: 'Private Name', reaction: 'New Reaction', emoji: 'New Emoji'},
+````
+The `name` property is the public name that everyone will see. `value` is the private name that is only used in business logic. These are fine to be the same, but don't have to be. `reaction` is the `emoji` without the surrounding tags. 
 
 ### Step 2
- Naviage to `IteroLolApp/commands/addGame.js`. In `addGame.js` add the new team to both lists in the same format as they appear. Follow the instructions from step 1 again making sure to leave a commma.
+ Naviage to `IteroLolApp/commands/addGame.js`. In `addGame.js` add the new team to both lists in the same format as they appear:
+ ````
+ { name: 'KOI', value: 'KOI' },
+ { name: 'MAD Lions', value: 'MAD Lions' },
+ { name: 'Team Heretics', value: 'Team Heretics' },
+ { name: 'Public Name', value: 'Private Name' },
+ ````
