@@ -27,7 +27,8 @@ module.exports = {
                     { name: 'SK Gaming', value: 'SK Gaming' },
                     { name: 'KOI', value: 'KOI' },
                     { name: 'MAD Lions', value: 'MAD Lions' },
-                    { name: 'Team Heretics', value: 'Team Heretics' },))
+                    { name: 'Team Heretics', value: 'Team Heretics' },
+                    ))
         .addStringOption(option =>
             option.setName('team2')
                 .setDescription('Team 2')
