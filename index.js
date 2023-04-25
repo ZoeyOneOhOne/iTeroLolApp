@@ -63,8 +63,10 @@ client.on('messageReactionAdd', (reaction, user) => {
 	if (!reaction.message?.reactions.cache.find(v => v.emoji.id === '1086474462834200687')) { // If the stop emoji doesnt yet exist
 		if (teamIDs.includes(reaction.emoji.id)) {
 			if (user.username !== 'IteroBetBot') {
-				console.log('Ya');
-				console.log(reaction.message.member.roles.cache.find(r => r.name = 'Bot Master'));
+				console.log(reaction.message.member.roles.cache.find(r => r.name === 'BotMaster'));
+				if (reaction.message.member.roles.cache.find(r => r.name === 'Bot Master')) {
+					console.log('He had the role');
+				}
 			}
 			if(!reaction1) {
 				reaction1 = reaction.emoji.id;
@@ -89,7 +91,7 @@ client.on('messageReactionAdd', (reaction, user) => {
 		reaction.message.reactions.cache.get('1086474462834200687').remove()
 			.catch(error => console.error('Failed to remove reactions:', error));
 
-		// Problem right now is that if Collin has added the stop emoji and then I try to add it again it removes both of ours, not just mine.
+		// TODO: Problem right now is that if Collin has added the stop emoji and then I try to add it again it removes both of ours, not just mine.
 
 		} else {
 		console.log('Array1', voterArray1);
