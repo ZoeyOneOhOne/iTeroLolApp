@@ -24,7 +24,7 @@ In the `teamList.js` file add the `name`, `value`, `reaction`, and `emoji` maint
 { name: 'Team Heretics', value: 'Team Heretics', reaction: '1065287618939600917', emoji: '<:TH:1065287618939600917>'},
 { name: 'Public Name', value: 'Private Name', reaction: 'New Reaction', emoji: 'New Emoji'},
 ````
-The `name` property is the public name that everyone will see. `value` is the private name that is only used in business logic. These are fine to be the same, but don't have to be. `reaction` is the `emoji` without the surrounding tags. 
+The `name` property is the *public* name that everyone will see. `value` is the *private* name that is only used in business logic. These are fine to be the same, but don't have to be. `reaction` is the `emoji` without the surrounding tags. 
 
 ### Step 2
  Naviage to `IteroLolApp/commands/addGame.js`. In `addGame.js` add the new team to both lists in the same format as they appear:
