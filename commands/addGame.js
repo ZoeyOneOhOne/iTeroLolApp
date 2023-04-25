@@ -28,6 +28,7 @@ module.exports = {
                     { name: 'KOI', value: 'KOI' },
                     { name: 'MAD Lions', value: 'MAD Lions' },
                     { name: 'Team Heretics', value: 'Team Heretics' },
+		    { name: "Anyone's Legend", value: "Anyone's Legend" },
                     ))
         .addStringOption(option =>
             option.setName('team2')
@@ -44,6 +45,7 @@ module.exports = {
                     { name: 'KOI', value: 'KOI' },
                     { name: 'MAD Lions', value: 'MAD Lions' },
                     { name: 'Team Heretics', value: 'Team Heretics' },
+		    { name: "Anyone's Legend", value: "Anyone's Legend" },
                 )),
 	async execute(interaction) {
         const team1 = interaction.options.getString('team1');
