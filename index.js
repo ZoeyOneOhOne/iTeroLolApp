@@ -5,6 +5,7 @@ const { Client, Collection, Events, GatewayIntentBits, messageLink } = require('
 const { token } = require('./config.json');
 const { teamList } = require('./teamList');
 
+
 // Set up team list
 const teamIDs = [];
 for (let team of teamList) {
@@ -12,7 +13,8 @@ for (let team of teamList) {
   }
 
 // Set up roles
-const roles = ['Founder', 'The Board', 'Community Manager', 'Botmaster', 'Staff', 'Deputy Mods'];
+// const acceptedRoles = ['Founder', 'The Board', 'Community Manager', 'Staff', 'Deputy Mods', 'BotMaster'];
+const acceptedRoleIDs = ['761266506235379712', '761266861115441162', '1004747752980353084', '1029408764899635211', '1061776397091209387', '1077611324793688094'];
 
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions] });
@@ -60,14 +62,13 @@ client.on(Events.InteractionCreate, async interaction => {
 });
 
 client.on('messageReactionAdd', (reaction, user) => {
+	const guild = client.guilds.cache.get('686238814749851697');
+	let hasAccpetedRole = false;
+
 	if (!reaction.message?.reactions.cache.find(v => v.emoji.id === '1086474462834200687')) { // If the stop emoji doesnt yet exist
+
+		// If the reaction that was added already exists then add the vote to the array of votes
 		if (teamIDs.includes(reaction.emoji.id)) {
-			if (user.username !== 'IteroBetBot') {
-				console.log(reaction.message.member.roles.cache.find(r => r.name === 'BotMaster'));
-				if (reaction.message.member.roles.cache.find(r => r.name === 'Bot Master')) {
-					console.log('He had the role');
-				}
-			}
 			if(!reaction1) {
 				reaction1 = reaction.emoji.id;
 			} else if (!reaction2) {
@@ -87,30 +88,37 @@ client.on('messageReactionAdd', (reaction, user) => {
 	}
 
 	if (reaction.emoji.id === '1086474462834200687') { //If stop emoji
-		if (user.id != '235113888973062155') { // If the user who added the stop emoji isnt Admin then remove it
-		reaction.message.reactions.cache.get('1086474462834200687').remove()
-			.catch(error => console.error('Failed to remove reactions:', error));
-
-		// TODO: Problem right now is that if Collin has added the stop emoji and then I try to add it again it removes both of ours, not just mine.
-
-		} else {
-		console.log('Array1', voterArray1);
-		console.log('Array2',voterArray2);
-		 let finalString1 = '';
-		 let finalString2 = '';
-		 voterArray1.forEach(element => {
-			 finalString1 += element + " \n"
-		 });
-		 voterArray2.forEach(element => {
-			finalString2 += element + " \n"
+		// Get the user roles and check to see if any of the users roles are in acceptedRoleIDs
+		guild.members.fetch(user.id).then(member => {
+			acceptedRoleIDs.forEach(role => {
+				if (member.roles.cache.get(role)) {
+					console.log('They do have an accepted role');
+					hasAccpetedRole = true;	
+				}
+			})
+		}).then(() => {
+			if(hasAccpetedRole) {
+				console.log('Array1', voterArray1);
+				console.log('Array2',voterArray2);
+				let finalString1 = '';
+				let finalString2 = '';
+				voterArray1.forEach(element => {
+					finalString1 += element + " \n"
+				});
+				voterArray2.forEach(element => {
+					finalString2 += element + " \n"
+				});
+				const team1 = teamList.find(team => team.reaction === reaction1);
+				const team2 = teamList.find(team => team.reaction === reaction2);
+				finalString1 += 'Voted for ' + team1.name + ' ' + team1.emoji;
+				finalString2 += 'Voted for ' + team2.name + ' ' + team2.emoji;
+				client.channels.cache.get('1077612967639666738').send(finalString1);
+				client.channels.cache.get('1077612967639666738').send(finalString2);
+			 } else {
+				reaction.message.reactions.cache.get('1086474462834200687').remove()
+					.catch(error => console.error('Failed to remove reactions:', error));
+			 }
 		});
-		const team1 = teamList.find(team => team.reaction === reaction1);
-		const team2 = teamList.find(team => team.reaction === reaction2);
-		finalString1 += 'Voted for ' + team1.name + ' ' + team1.emoji;
-		finalString2 += 'Voted for ' + team2.name + ' ' + team2.emoji;
-		client.channels.cache.get('1077612967639666738').send(finalString1);
-		client.channels.cache.get('1077612967639666738').send(finalString2);
-		}
 	}
 
 });
