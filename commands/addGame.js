@@ -18,40 +18,44 @@ module.exports = {
                 .setDescription('Team 1')
                 .setRequired(true)
 			    .addChoices(
-			// LEC
-                	{ name: 'Fnatic', value: 'Fnatic', },
-                	{ name: 'G2 Esports', value: 'G2 Esports' },
-                	{ name: 'Team VItality', value: 'Team VItality' },
-                	{ name: 'Team BDS', value: 'Team BDS' },
-               		{ name: 'Excel', value: 'Excel' },
-                	{ name: 'Astralis', value: 'Astralis' },
-                	{ name: 'SK Gaming', value: 'SK Gaming' },
-                	{ name: 'KOI', value: 'KOI' },
-                	{ name: 'MAD Lions', value: 'MAD Lions' },
-                	{ name: 'Team Heretics', value: 'Team Heretics' },
+			{ name: 'Bilibili Gaming'},
+		{ name: 'JDG Gaming'},
+		{ name: 'Gen.G'},
+		{ name: 'T1'},
+		{ name: 'Cloud9'},
+		{ name: 'Golden Guardians'},
+		{ name: 'G2 Esports'},
+		{ name: 'MAD Lions'},
+		{ name: 'GAM Esports'},
+		{ name: 'Movistar R7'},
+		{ name: 'PSG Talon'},
+		{ name: 'LOUD'},
+		{ name: 'DetonatioN FocusMe'},
 		//
 		//Template below
-		// { name: 'NAME', value: 'VALUE', },
+		// { name: 'NAME'},
                     ))
         .addStringOption(option =>
             option.setName('team2')
                 .setDescription('Team 2')
                 .setRequired(true)
                 .addChoices(
-                    // LEC
-                	{ name: 'Fnatic', value: 'Fnatic', },
-                	{ name: 'G2 Esports', value: 'G2 Esports' },
-                	{ name: 'Team VItality', value: 'Team VItality' },
-                	{ name: 'Team BDS', value: 'Team BDS' },
-               		{ name: 'Excel', value: 'Excel' },
-                	{ name: 'Astralis', value: 'Astralis' },
-                	{ name: 'SK Gaming', value: 'SK Gaming' },
-                	{ name: 'KOI', value: 'KOI' },
-                	{ name: 'MAD Lions', value: 'MAD Lions' },
-                	{ name: 'Team Heretics', value: 'Team Heretics' },
+                    { name: 'Bilibili Gaming'},
+		{ name: 'JDG Gaming'},
+		{ name: 'Gen.G'},
+		{ name: 'T1'},
+		{ name: 'Cloud9'},
+		{ name: 'Golden Guardians'},
+		{ name: 'G2 Esports'},
+		{ name: 'MAD Lions'},
+		{ name: 'GAM Esports'},
+		{ name: 'Movistar R7'},
+		{ name: 'PSG Talon'},
+		{ name: 'LOUD'},
+		{ name: 'DetonatioN FocusMe'},
 		//
 		//Template below
-		// { name: 'NAME', value: 'VALUE', },
+		// { name: 'NAME'},
                 )),
 	async execute(interaction) {
         const team1 = interaction.options.getString('team1');
