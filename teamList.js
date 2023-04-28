@@ -10,5 +10,4 @@ const teamList = [
 	{ name: 'MAD Lions', value: 'MAD Lions', reaction: '1014887972266578000', emoji: '<:MAD:1014887972266578000>'},
     { name: 'Team Heretics', value: 'Team Heretics', reaction: '1065287618939600917', emoji: '<:TH:1065287618939600917>'},
 ]
-
 exports.teamList = teamList;

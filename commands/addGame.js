@@ -65,9 +65,9 @@ module.exports = {
         const team1Info = teamList.find(team => team.name === teamArray[0]);
         const team2Info = teamList.find(team => team.name === teamArray[1]);
         teamMessage1 = team1Info.emoji + ' ' + team1Info.name;
-        reaction1 = team1Info.reaction;
+        reaction1 = team1Info.emoji.replace(/[^0-9.]/g, '');
         teamMessage2 = team2Info.name + ' ' + team2Info.emoji;
-        reaction2 = team2Info.reaction;
+        reaction2 = team2Info.emoji.replace(/[^0-9.]/g, '');;
 
         // Send the message and add rections
         // const message = await interaction.reply({content: teamMessage1 + ' vs ' + teamMessage2, fetchReply: true});

@@ -9,7 +9,7 @@ const { teamList } = require('./teamList');
 // Set up team list
 const teamIDs = [];
 for (let team of teamList) {
-	teamIDs.push(team.reaction);
+	teamIDs.push(team.emoji.replace(/[^0-9.]/g, ''));
   }
 
 // Set up roles
@@ -64,6 +64,8 @@ client.on(Events.InteractionCreate, async interaction => {
 client.on('messageReactionAdd', (reaction, user) => {
 	const guild = client.guilds.cache.get('686238814749851697');
 	let hasAccpetedRole = false;
+	const word = '<:TH:1065287618939600917>';
+	console.log(word.replace(/[^0-9.]/g, ''));
 
 	if (!reaction.message?.reactions.cache.find(v => v.emoji.id === '1086474462834200687')) { // If the stop emoji doesnt yet exist
 
@@ -108,8 +110,8 @@ client.on('messageReactionAdd', (reaction, user) => {
 				voterArray2.forEach(element => {
 					finalString2 += element + " \n"
 				});
-				const team1 = teamList.find(team => team.reaction === reaction1);
-				const team2 = teamList.find(team => team.reaction === reaction2);
+				const team1 = teamList.find(team => team.emoji.replace(/[^0-9.]/g, '') === reaction1);
+				const team2 = teamList.find(team => team.emoji.replace(/[^0-9.]/g, '') === reaction2);
 				finalString1 += 'Voted for ' + team1.name + ' ' + team1.emoji;
 				finalString2 += 'Voted for ' + team2.name + ' ' + team2.emoji;
 				client.channels.cache.get('1077612967639666738').send(finalString1);
