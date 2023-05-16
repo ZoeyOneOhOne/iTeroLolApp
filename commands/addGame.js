@@ -18,44 +18,26 @@ module.exports = {
                 .setDescription('Team 1')
                 .setRequired(true)
 			    .addChoices(
-			{ name: 'Bilibili Gaming'},
-		{ name: 'JDG Gaming'},
-		{ name: 'Gen.G'},
-		{ name: 'T1'},
-		{ name: 'Cloud9'},
-		{ name: 'Golden Guardians'},
-		{ name: 'G2 Esports'},
-		{ name: 'MAD Lions'},
-		{ name: 'GAM Esports'},
-		{ name: 'Movistar R7'},
-		{ name: 'PSG Talon'},
-		{ name: 'LOUD'},
-		{ name: 'DetonatioN FocusMe'},
-		//
-		//Template below
-		// { name: 'NAME'},
-                    ))
+                    { name: 'Bilibili Gaming', value: 'Bilibili Gaming'},
+                    { name: 'JDG Gaming', value: 'JDG Gaming'},
+                    { name: 'Gen.G', value: 'Gen.G'},
+                    { name: 'T1', value: 'T1'},
+                    { name: 'Cloud9', value: 'Cloud9'},
+                    { name: 'Golden Guardians', value: 'Golden Guardians'},
+                    { name: 'G2 Esports', value: 'G2 Esports'},
+                ))
         .addStringOption(option =>
             option.setName('team2')
                 .setDescription('Team 2')
                 .setRequired(true)
                 .addChoices(
-                    { name: 'Bilibili Gaming'},
-		{ name: 'JDG Gaming'},
-		{ name: 'Gen.G'},
-		{ name: 'T1'},
-		{ name: 'Cloud9'},
-		{ name: 'Golden Guardians'},
-		{ name: 'G2 Esports'},
-		{ name: 'MAD Lions'},
-		{ name: 'GAM Esports'},
-		{ name: 'Movistar R7'},
-		{ name: 'PSG Talon'},
-		{ name: 'LOUD'},
-		{ name: 'DetonatioN FocusMe'},
-		//
-		//Template below
-		// { name: 'NAME'},
+                    { name: 'Bilibili Gaming', value: 'Bilibili Gaming'},
+                    { name: 'JDG Gaming', value: 'JDG Gaming'},
+                    { name: 'Gen.G', value: 'Gen.G'},
+                    { name: 'T1', value: 'T1'},
+                    { name: 'Cloud9', value: 'Cloud9'},
+                    { name: 'Golden Guardians', value: 'Golden Guardians'},
+                    { name: 'G2 Esports', value: 'G2 Esports'},
                 )),
 	async execute(interaction) {
         const team1 = interaction.options.getString('team1');
