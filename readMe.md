@@ -10,7 +10,7 @@ To start the bot run ```node index.js```
 
 ## Adding new slash commands
 
-Create the new command file in the commands folder. Deploy the command using ```run node deploy-commands.js```
+Create the new command file in the commands folder. Deploy the command using ```node deploy-commands.js```
 
 # Admin Documentation
 
