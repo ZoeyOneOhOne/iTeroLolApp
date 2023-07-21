@@ -130,3 +130,20 @@ client.on('messageReactionAdd', (reaction, user) => {
 client.once(Events.ClientReady, c => {
 	console.log(`Ready! Logged in as ${c.user.tag}`);
 });
+
+
+// TODO: OCT: 10th deadline
+
+//1.) Bot doesn't like there to be numbers in the name of teams
+
+//2.) Kick bot and re-add so Collin can change name and pic.
+
+//4.) Scoreboard
+
+//5.) Consolidate teamsList properties
+
+//6.) Come up with a way to differentiate games in chat
+
+//7.) When game locks edit the message and say locked
+
+//8.) Add game needs to acccept a new parameter (number of series (2 or 3))
