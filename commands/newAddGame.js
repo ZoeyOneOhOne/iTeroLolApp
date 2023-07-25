@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require('discord.js');
+const { SlashCommandBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ComponentType } = require('discord.js');
 const { teamList } = require('../teamList');
 const { Client, GatewayIntentBits } = require('discord.js');
 const { token } = require('../config.json');
@@ -77,6 +77,7 @@ module.exports = {
         const collector = message2.createMessageComponentCollector({ componentType: ComponentType.StringSelect, time: 3_600_000 });
 
         collector.on('collect', async i => {
+            console.log(i);
             const selection = i.values[0];
             await i.reply(`${i.user} has selected ${selection}!`);
         });
