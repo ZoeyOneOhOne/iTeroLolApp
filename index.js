@@ -61,69 +61,6 @@ client.on(Events.InteractionCreate, async interaction => {
 	}
 });
 
-// client.on('messageReactionAdd', (reaction, user) => {
-// 	const guild = client.guilds.cache.get('686238814749851697');
-// 	let hasAccpetedRole = false;
-// 	const word = '<:TH:1065287618939600917>';
-// 	console.log(word.replace(/[^0-9.]/g, ''));
-
-// 	if (!reaction.message?.reactions.cache.find(v => v.emoji.id === '1086474462834200687')) { // If the stop emoji doesnt yet exist
-
-// 		// If the reaction that was added already exists then add the vote to the array of votes
-// 		if (teamIDs.includes(reaction.emoji.id)) {
-// 			if(!reaction1) {
-// 				reaction1 = reaction.emoji.id;
-// 			} else if (!reaction2) {
-// 				reaction2 = reaction.emoji.id;
-// 			} 
-// 			if (reaction.emoji.id === reaction1) {
-// 				if (user.username !== 'IteroBetBot') {
-// 					voterArray1.push(user.username)
-// 				}
-// 			} else if (reaction.emoji.id === reaction2) {
-// 				if (user.username !== 'IteroBetBot') {
-// 					voterArray2.push(user.username)
-// 				}
-// 			}
-// 			console.log (voterArray1, voterArray2);
-// 		}
-// 	}
-
-// 	if (reaction.emoji.id === '1086474462834200687') { //If stop emoji
-// 		// Get the user roles and check to see if any of the users roles are in acceptedRoleIDs
-// 		guild.members.fetch(user.id).then(member => {
-// 			acceptedRoleIDs.forEach(role => {
-// 				if (member.roles.cache.get(role)) {
-// 					console.log('They do have an accepted role');
-// 					hasAccpetedRole = true;	
-// 				}
-// 			})
-// 		}).then(() => {
-// 			if(hasAccpetedRole) {
-// 				console.log('Array1', voterArray1);
-// 				console.log('Array2',voterArray2);
-// 				let finalString1 = '';
-// 				let finalString2 = '';
-// 				voterArray1.forEach(element => {
-// 					finalString1 += element + " \n"
-// 				});
-// 				voterArray2.forEach(element => {
-// 					finalString2 += element + " \n"
-// 				});
-// 				const team1 = teamList.find(team => team.emoji.replace(/[^0-9.]/g, '') === reaction1);
-// 				const team2 = teamList.find(team => team.emoji.replace(/[^0-9.]/g, '') === reaction2);
-// 				finalString1 += 'Voted for ' + team1.name + ' ' + team1.emoji;
-// 				finalString2 += 'Voted for ' + team2.name + ' ' + team2.emoji;
-// 				client.channels.cache.get('1077612967639666738').send(finalString1);
-// 				client.channels.cache.get('1077612967639666738').send(finalString2);
-// 			 } else {
-// 				reaction.message.reactions.cache.get('1086474462834200687').remove()
-// 					.catch(error => console.error('Failed to remove reactions:', error));
-// 			 }
-// 		});
-// 	}
-
-// });
 
 // When the client is ready, run this code (only once)
 // Use 'c' for the event parameter to keep it separate from the already defined 'client'
