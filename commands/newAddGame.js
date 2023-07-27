@@ -74,12 +74,17 @@ module.exports = {
             components: [row],
         });
 
-        const collector = message2.createMessageComponentCollector({ componentType: ComponentType.StringSelect, time: 3_600_000 });
+        const collector = message2.createMessageComponentCollector({ componentType: ComponentType.Button, time: 3_600_000 });
 
         collector.on('collect', async i => {
-            const selection = i.values[0];
-            console.log(`${i.user} has selected ${selection}!`);
-            // await i.reply(`${i.user} has selected ${selection}!`);
+            console.log(i);
+            let team = '';
+            if (i.customId === 'team1Button') {
+                team = team1;
+            } else {
+                team = team2;
+            }
+            await i.reply(`${i.user.username} voted for ${team}!`);
         });
 	},
 };
