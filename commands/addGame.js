@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require('discord.js');
+const { SlashCommandBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ComponentType } = require('discord.js');
 const { teamList } = require('../teamList');
 const { Client, GatewayIntentBits } = require('discord.js');
 const { token } = require('../config.json');
@@ -40,29 +40,18 @@ module.exports = {
                     { name: 'G2 Esports', value: 'G2 Esports'},
                 )),
 	async execute(interaction) {
+        // Set up team information
         const team1 = interaction.options.getString('team1');
         const team2 = interaction.options.getString('team2');
         const teamArray = [team1, team2];
         let teamMessage1 = '';
         let teamMessage2 = '';
-        let reaction1 = '';
-        let reaction2 = '';
-
         const team1Info = teamList.find(team => team.name === teamArray[0]);
         const team2Info = teamList.find(team => team.name === teamArray[1]);
         teamMessage1 = team1Info.emoji + ' ' + team1Info.name;
-        reaction1 = team1Info.emoji.replace(/[^0-9.]/g, '');
         teamMessage2 = team2Info.name + ' ' + team2Info.emoji;
-        reaction2 = team2Info.emoji.replace(/[^0-9.]/g, '');;
 
-        // Send the message and add rections
-        // const message = await interaction.reply({content: teamMessage1 + ' vs ' + teamMessage2, fetchReply: true});
-        const message = await interaction.reply({content: 'Game posted.', fetchReply: true});
-        const message2 = await client.channels.cache.get('1077612967639666738').send(teamMessage1 + ' vs ' + teamMessage2);
-        let id = message2.id;
-        message2.react(reaction1);
-        message2.react(reaction2);
-
+        // Build buttons
         const team1Button = new ButtonBuilder()
 			.setCustomId('team1Button')
             // .setLabel(team1Info.name)
@@ -78,9 +67,25 @@ module.exports = {
         const row = new ActionRowBuilder()
         .addComponents(team1Button, team2Button);
 
-        await client.channels.cache.get('1077612967639666738').send({
-			components: [row],
-		});
-        //console.log(id);
+        // Send the message and add buttons
+        await interaction.reply({content: 'Game posted.', fetchReply: true});
+        const message2 = await client.channels.cache.get('1077612967639666738').send({
+            content: teamMessage1 + ' vs ' + teamMessage2,
+            components: [row],
+        });
+
+        const collector = message2.createMessageComponentCollector({ componentType: ComponentType.Button, time: 60000 });
+
+        collector.on('collect', async i => {
+            console.log(i);
+            let team = '';
+            if (i.customId === 'team1Button') {
+                team = team1;
+            } else {
+                team = team2;
+            }
+            client.users.cache.get(i.user.id).send(`${i.user.username} voted for ${team}!`);
+        });
+
 	},
 };
