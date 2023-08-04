@@ -1,9 +1,14 @@
 const fs = require('node:fs');
 const path = require('node:path');
-// Require the necessary discord.js classes
 const { Client, Collection, Events, GatewayIntentBits, messageLink } = require('discord.js');
 const { token } = require('./config.json');
 const { teamList } = require('./teamList');
+const { firebaseConfig } = require('./firebaseConfig');
+const { initializeApp } = require('firebase/app');
+const { getFirestore, collection, getDocs } = require('firebase/firestore/lite');
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app)
 
 
 // Set up team list
@@ -22,10 +27,6 @@ client.commands = new Collection();
 
 const commandsPath = path.join(__dirname, 'commands');
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
-let voterArray1 = [];
-let voterArray2 = [];
-let reaction1 = null;
-let reaction2 = null;
 
 for (const file of commandFiles) {
 	const filePath = path.join(commandsPath, file);
@@ -42,6 +43,7 @@ for (const file of commandFiles) {
 
 // Log in to Discord with your client's token
 client.login(token);
+
 
 // Handling slash commands
 client.on(Events.InteractionCreate, async interaction => {
@@ -66,6 +68,14 @@ client.on(Events.InteractionCreate, async interaction => {
 // Use 'c' for the event parameter to keep it separate from the already defined 'client'
 client.once(Events.ClientReady, c => {
 	console.log(`Ready! Logged in as ${c.user.tag}`);
+	async function getTeams(db) {
+		const teamcol = collection(db, 'TeamList');
+		const teams = await getDocs(teamcol);
+		const teamlist = teams.docs.map(doc => doc.data());
+		console.log(teamList);
+		return teamList;
+	  }
+	getTeams(db);
 });
 
 
