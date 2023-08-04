@@ -72,8 +72,8 @@ client.once(Events.ClientReady, c => {
 		const teamcol = collection(db, 'TeamList');
 		const teams = await getDocs(teamcol);
 		const teamlist = teams.docs.map(doc => doc.data());
-		console.log(teamList);
-		return teamList;
+		console.log(teamlist);
+		return teamlist;
 	  }
 	getTeams(db);
 });
