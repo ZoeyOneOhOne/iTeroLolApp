@@ -1,9 +1,8 @@
 const { SlashCommandBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ComponentType } = require('discord.js');
-const { teamList } = require('../teamList');
+// const { teamList } = require('../teamList');
 const { Client, GatewayIntentBits } = require('discord.js');
 const { token } = require('../config.json');
-
-
+const { getTeams } = require('../db');
 
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions] });
@@ -41,15 +40,21 @@ module.exports = {
                 )),
 	async execute(interaction) {
         // Set up team information
+        const teamList = getTeams();
         const team1 = interaction.options.getString('team1');
         const team2 = interaction.options.getString('team2');
         const teamArray = [team1, team2];
         let teamMessage1 = '';
         let teamMessage2 = '';
-        const team1Info = teamList.find(team => team.name === teamArray[0]);
-        const team2Info = teamList.find(team => team.name === teamArray[1]);
-        teamMessage1 = team1Info.emoji + ' ' + team1Info.name;
-        teamMessage2 = team2Info.name + ' ' + team2Info.emoji;
+
+        // I think the problem is right here. I did that (await teamList).find because it said teamList.find wasn't a function because teamList is a promise ig.
+    
+
+        console.log((await teamList).find(team => team.Name === teamArray[0]));
+        const team1Info = (await teamList).find(team => team.Name === teamArray[0]);
+        const team2Info = (await teamList).find(team => team.Name === teamArray[1]);
+        teamMessage1 = team1Info.Emoji + ' ' + team1Info.Name;
+        teamMessage2 = team2Info.Name + ' ' + team2Info.Emoji;
 
         // Build buttons
         const team1Button = new ButtonBuilder()

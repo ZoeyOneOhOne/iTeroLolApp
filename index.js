@@ -2,20 +2,9 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits, messageLink } = require('discord.js');
 const { token } = require('./config.json');
-const { teamList } = require('./teamList');
-const { firebaseConfig } = require('./firebaseConfig');
-const { initializeApp } = require('firebase/app');
-const { getFirestore, collection, getDocs } = require('firebase/firestore/lite');
+const { getTeams } = require('./db');
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app)
-
-
-// Set up team list
-const teamIDs = [];
-for (let team of teamList) {
-	teamIDs.push(team.emoji.replace(/[^0-9.]/g, ''));
-  }
+const teamList = getTeams();
 
 // Set up roles
 // const acceptedRoles = ['Founder', 'The Board', 'Community Manager', 'Staff', 'Deputy Mods', 'BotMaster'];
@@ -68,20 +57,10 @@ client.on(Events.InteractionCreate, async interaction => {
 // Use 'c' for the event parameter to keep it separate from the already defined 'client'
 client.once(Events.ClientReady, c => {
 	console.log(`Ready! Logged in as ${c.user.tag}`);
-	async function getTeams(db) {
-		const teamcol = collection(db, 'TeamList');
-		const teams = await getDocs(teamcol);
-		const teamlist = teams.docs.map(doc => doc.data());
-		console.log(teamlist);
-		return teamlist;
-	  }
-	getTeams(db);
 });
 
 
 // TODO: OCT: 10th deadline
-
-//1.) Bot doesn't like there to be numbers in the name of teams
 
 //2.) Kick bot and re-add so Collin can change name and pic.
 
