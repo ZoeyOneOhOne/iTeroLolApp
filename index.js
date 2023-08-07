@@ -2,9 +2,6 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits, messageLink } = require('discord.js');
 const { token } = require('./config.json');
-const { getTeams } = require('./db');
-
-const teamList = getTeams();
 
 // Set up roles
 // const acceptedRoles = ['Founder', 'The Board', 'Community Manager', 'Staff', 'Deputy Mods', 'BotMaster'];

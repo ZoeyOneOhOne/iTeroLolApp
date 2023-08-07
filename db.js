@@ -9,8 +9,7 @@ async function getTeams() {
 	const teamcol = collection(db, 'TeamList');
 	const teams = await getDocs(teamcol);
 	const teamlist = teams.docs.map(doc => doc.data());
-    const teamResult = await Promise.all(teamlist);
-	return teamResult;
+	return teamlist;
 }
 
 exports.getTeams = getTeams;
