@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ComponentType } = require('discord.js');
 const { Client, GatewayIntentBits } = require('discord.js');
 const { token } = require('../config.json');
-const { getTeams, castVote, addGame } = require('../db');
+const { getTeams, castVote, addGame, seriesVote } = require('../db');
 
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions] });
@@ -59,6 +59,8 @@ module.exports = {
         teamMessage1 = team1Info.Emoji + ' ' + team1Info.Name;
         teamMessage2 = team2Info.Name + ' ' + team2Info.Emoji;
 
+        const series = interaction.options.getString('series');
+
         // Build buttons
         const team1Button = new ButtonBuilder()
 			.setCustomId('team1Button')
@@ -75,29 +77,85 @@ module.exports = {
         const row = new ActionRowBuilder()
         .addComponents(team1Button, team2Button);
 
-        // Send the message and add buttons
-        await interaction.reply({content: 'Game posted.', fetchReply: true});
-        const message2 = await client.channels.cache.get('1077612967639666738').send({
-            content: teamMessage1 + ' vs ' + teamMessage2,
-            components: [row],
-        });
+        // Build button for series
 
-        await addGame(team1, team2, message2.id);
+        if(series === '3') {
+            const button2 = new ButtonBuilder()
+			.setCustomId('button2')
+            // .setLabel(team1Info.name)
+			.setStyle(ButtonStyle.Secondary)
+            .setEmoji("2️⃣");
 
-        const collector = message2.createMessageComponentCollector({ componentType: ComponentType.Button, time: 60000 });
+            const button3 = new ButtonBuilder()
+                .setCustomId('button3')
+                // .setLabel(team2Info.name)
+                .setStyle(ButtonStyle.Secondary)
+                .setEmoji("3️⃣");
+            
+            row.addComponents(button2, button3);
+        } else if (series === '5') {
+            const button3 = new ButtonBuilder()
+                .setCustomId('button3')
+                // .setLabel(team2Info.name)
+                .setStyle(ButtonStyle.Secondary)
+                .setEmoji("3️⃣");
 
-        collector.on('collect', async i => {
-            console.log(i.message.id);
-            let team = '';
-            if (i.customId === 'team1Button') {
-                team = team1;
-            } else {
-                team = team2;
-            }
-            await castVote(team, i.user.username, 3, i.message.id).then(() => {
-                client.users.cache.get(i.user.id).send(`${i.user.username} voted for ${team}!`);
-            })
-        });
+            const button4 = new ButtonBuilder()
+                .setCustomId('button4')
+                // .setLabel(team1Info.name)
+                .setStyle(ButtonStyle.Secondary)
+                .setEmoji("4️⃣");
+
+            const button5 = new ButtonBuilder()
+                .setCustomId('button5')
+                // .setLabel(team1Info.name)
+                .setStyle(ButtonStyle.Secondary)
+                .setEmoji("5️⃣");
+
+            row.addComponents(button3, button4, button5);
+        }
+
+         // Send the message and add buttons
+         await interaction.reply({content: 'Game posted.', fetchReply: true});
+         const message2 = await client.channels.cache.get('1077612967639666738').send({
+             content: teamMessage1 + ' vs ' + teamMessage2,
+             components: [row],
+         });
+
+         await addGame(team1, team2, message2.id);
+
+         const collector = message2.createMessageComponentCollector({ componentType: ComponentType.Button, time: 60000 });
+
+         collector.on('collect', async i => {
+             let team = '';
+             if (i.customId === 'team1Button') {
+                 team = team1;
+                 await castVote(team, i.user.username, i.message.id).then(() => {
+                    client.users.cache.get(i.user.id).send(`${i.user.username} voted for ${team}!`);
+                })
+             } else if (i.customId === 'team2Button') {
+                 team = team2;
+                 await castVote(team, i.user.username, 3, i.message.id).then(() => {
+                    client.users.cache.get(i.user.id).send(`${i.user.username} voted for ${team}!`);
+                })
+             } else if (i.customId === 'button2') {
+                await seriesVote('2', i.user.username, i.message.id).then(() => {
+                    client.users.cache.get(i.user.id).send(`${i.user.username} voted for 2 games in the series!`);
+                })
+             } else if (i.customId === 'button3') {
+                await seriesVote('3', i.user.username, i.message.id).then(() => {
+                    client.users.cache.get(i.user.id).send(`${i.user.username} voted for 3 games in the series!`);
+                })
+             } else if (i.customId === 'button4') {
+                await seriesVote('4', i.user.username, i.message.id).then(() => {
+                    client.users.cache.get(i.user.id).send(`${i.user.username} voted for 4 games in the series!`);
+                })
+             } else if (i.customId === 'button5') {
+                await seriesVote('5', i.user.username, i.message.id).then(() => {
+                    client.users.cache.get(i.user.id).send(`${i.user.username} voted for 5 games in the series!`);
+                })
+             }
+         });
 
 	},
 };

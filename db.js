@@ -1,6 +1,6 @@
 const { firebaseConfig } = require('./firebaseConfig');
 const { initializeApp } = require('firebase/app');
-const { getFirestore, collection, getDocs, doc, setDoc } = require('firebase/firestore/lite');
+const { getFirestore, collection, getDocs, doc, setDoc, updateDoc } = require('firebase/firestore/lite');
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app)
@@ -12,13 +12,19 @@ async function getTeams() {
 	return teamlist;
 }
 
-async function castVote(team, username, votedScore, messageID) {
+async function castVote(team, username, messageID) {
 	data = {
 		votedFor: team,
-		votedScore: votedScore
 	}
 	const userVoteDocRef = doc(db, `Games/${messageID}/Votes/${username}`);
 	await setDoc(userVoteDocRef, data);
+}
+
+async function seriesVote(series, username, messageID) {
+	const userVoteDocRef = doc(db, `Games/${messageID}/Votes/${username}`);
+	await updateDoc(userVoteDocRef, {
+		numberOfGames: series
+	});
 }
 
 async function addGame(team1, team2, messageID) {
@@ -36,3 +42,4 @@ async function addGame(team1, team2, messageID) {
 exports.getTeams = getTeams;
 exports.castVote = castVote;
 exports.addGame = addGame;
+exports.seriesVote = seriesVote;

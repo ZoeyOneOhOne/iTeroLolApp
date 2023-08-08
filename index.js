@@ -65,8 +65,8 @@ client.once(Events.ClientReady, c => {
 
 //5.) Consolidate teamsList properties
 
-//6.) Come up with a way to differentiate games in chat
-
 //7.) When game locks edit the message and say locked
 
 //8.) Add game needs to acccept a new parameter (number of series (2 or 3))
+
+//9.) Changing vote isn't working super well
