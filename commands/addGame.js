@@ -36,6 +36,15 @@ module.exports = {
                     { name: 'Cloud9', value: 'Cloud9'},
                     { name: 'Golden Guardians', value: 'Golden Guardians'},
                     { name: 'G2 Esports', value: 'G2 Esports'},
+                ))
+        .addStringOption(option =>
+            option.setName('series')
+                .setDescription('Number of games')
+                .setRequired(true)
+                .addChoices(
+                    { name: '1', value: '1'},
+                    { name: '3', value: '3'},
+                    { name: '5', value: '5'},
                 )),
 	async execute(interaction) {
         // Set up team information
