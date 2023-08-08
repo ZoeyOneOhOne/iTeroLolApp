@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ComponentType } = require('discord.js');
 const { Client, GatewayIntentBits } = require('discord.js');
 const { token } = require('../config.json');
-const { getTeams } = require('../db');
+const { getTeams, castVote } = require('../db');
 
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions] });
@@ -76,14 +76,15 @@ module.exports = {
         const collector = message2.createMessageComponentCollector({ componentType: ComponentType.Button, time: 60000 });
 
         collector.on('collect', async i => {
-            console.log(i);
             let team = '';
             if (i.customId === 'team1Button') {
                 team = team1;
             } else {
                 team = team2;
             }
-            client.users.cache.get(i.user.id).send(`${i.user.username} voted for ${team}!`);
+            await castVote(team, i.user.username, 3).then(() => {
+                client.users.cache.get(i.user.id).send(`${i.user.username} voted for ${team}!`);
+            })
         });
 
 	},
