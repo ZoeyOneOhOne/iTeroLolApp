@@ -70,3 +70,5 @@ client.once(Events.ClientReady, c => {
 //8.) Add game needs to acccept a new parameter (number of series (2 or 3))
 
 //9.) Changing vote isn't working super well
+
+//10.) If you vote on a number before a team it breaks
