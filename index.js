@@ -3,10 +3,6 @@ const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits, messageLink } = require('discord.js');
 const { token } = require('./config.json');
 
-// Set up roles
-// const acceptedRoles = ['Founder', 'The Board', 'Community Manager', 'Staff', 'Deputy Mods', 'BotMaster'];
-const acceptedRoleIDs = ['761266506235379712', '761266861115441162', '1004747752980353084', '1029408764899635211', '1061776397091209387', '1077611324793688094'];
-
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions] });
 client.commands = new Collection();
@@ -56,7 +52,6 @@ client.once(Events.ClientReady, c => {
 	console.log(`Ready! Logged in as ${c.user.tag}`);
 });
 
-
 // TODO: OCT: 10th deadline
 
 //2.) Kick bot and re-add so Collin can change name and pic.
@@ -66,8 +61,6 @@ client.once(Events.ClientReady, c => {
 //5.) Consolidate teamsList properties
 
 //7.) When game locks edit the message and say locked
-
-//8.) Add game needs to acccept a new parameter (number of series (2 or 3))
 
 //9.) Changing vote isn't working super well
 

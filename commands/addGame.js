@@ -2,10 +2,25 @@ const { SlashCommandBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, Compo
 const { Client, GatewayIntentBits } = require('discord.js');
 const { token } = require('../config.json');
 const { getTeams, castVote, addGame, seriesVote } = require('../db');
+const { collectorMap } = require('../collectorManager');
 
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions] });
 client.login(token);
+
+// Set up roles
+// const acceptedRoles = ['Founder', 'The Board', 'Community Manager', 'Staff', 'Deputy Mods', 'BotMaster'];
+// const acceptedRoleIDs = ['761266506235379712', '761266861115441162', '1004747752980353084', '1029408764899635211', '1061776397091209387', '1077611324793688094'];
+
+// Function to check if two arrays have common elements
+// function hasCommonElement(arr1, arr2) {
+//     for (const element of arr1) {
+//         if (arr2.includes(element)) {
+//             return true;
+//         }
+//     }
+//     return false;
+// }
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -64,13 +79,11 @@ module.exports = {
         // Build buttons
         const team1Button = new ButtonBuilder()
 			.setCustomId('team1Button')
-            // .setLabel(team1Info.name)
 			.setStyle(ButtonStyle.Secondary)
             .setEmoji(team1Info.Emoji);
 
 		const team2Button = new ButtonBuilder()
 			.setCustomId('team2Button')
-            // .setLabel(team2Info.name)
 			.setStyle(ButtonStyle.Secondary)
             .setEmoji(team2Info.Emoji);
 
@@ -82,13 +95,11 @@ module.exports = {
         if(series === '3') {
             const button2 = new ButtonBuilder()
 			.setCustomId('button2')
-            // .setLabel(team1Info.name)
 			.setStyle(ButtonStyle.Secondary)
             .setEmoji("2️⃣");
 
             const button3 = new ButtonBuilder()
                 .setCustomId('button3')
-                // .setLabel(team2Info.name)
                 .setStyle(ButtonStyle.Secondary)
                 .setEmoji("3️⃣");
             
@@ -96,19 +107,16 @@ module.exports = {
         } else if (series === '5') {
             const button3 = new ButtonBuilder()
                 .setCustomId('button3')
-                // .setLabel(team2Info.name)
                 .setStyle(ButtonStyle.Secondary)
                 .setEmoji("3️⃣");
 
             const button4 = new ButtonBuilder()
                 .setCustomId('button4')
-                // .setLabel(team1Info.name)
                 .setStyle(ButtonStyle.Secondary)
                 .setEmoji("4️⃣");
 
             const button5 = new ButtonBuilder()
                 .setCustomId('button5')
-                // .setLabel(team1Info.name)
                 .setStyle(ButtonStyle.Secondary)
                 .setEmoji("5️⃣");
 
@@ -116,7 +124,7 @@ module.exports = {
         }
 
          // Send the message and add buttons
-         await interaction.reply({content: 'Game posted.', fetchReply: true});
+         await interaction.reply({content: 'Game posted.' + team1Info.Emoji + ' ' + team2Info.Emoji, fetchReply: true});
          const message2 = await client.channels.cache.get('1077612967639666738').send({
              content: teamMessage1 + ' vs ' + teamMessage2,
              components: [row],
@@ -156,6 +164,6 @@ module.exports = {
                 })
              }
          });
-
+         collectorMap.set(message2.id, collector);
 	},
 };
