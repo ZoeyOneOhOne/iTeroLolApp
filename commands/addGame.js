@@ -12,15 +12,6 @@ client.login(token);
 // const acceptedRoles = ['Founder', 'The Board', 'Community Manager', 'Staff', 'Deputy Mods', 'BotMaster'];
 // const acceptedRoleIDs = ['761266506235379712', '761266861115441162', '1004747752980353084', '1029408764899635211', '1061776397091209387', '1077611324793688094'];
 
-// Function to check if two arrays have common elements
-// function hasCommonElement(arr1, arr2) {
-//     for (const element of arr1) {
-//         if (arr2.includes(element)) {
-//             return true;
-//         }
-//     }
-//     return false;
-// }
 
 module.exports = {
 	data: new SlashCommandBuilder()
