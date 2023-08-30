@@ -51,7 +51,7 @@ async function reportGame(result, messageId, games) {
 		console.log('Game reported successfully');
 
 		const userList = await getUsersWhoVotedCorrectly(messageId, result);
-		await updateScoreboard(userList);
+		await updateScoreboard(userList, messageId, games);
 	} catch (error) {
 		console.error('Error reporting game:', error);
 	}
@@ -79,30 +79,49 @@ async function getUsersWhoVotedCorrectly(messageId, winner) {
 	  });
 }
 
-async function updateScoreboard(userList) {
+async function updateScoreboard(userList, messageId, games) {
 	const scoreRef = collection(db, 'Scoreboard');
 
 	try {
-		for (const username of userList) {
-		  const userDocRef = doc(scoreRef, username);
-		  
-		  const userDocSnapshot = await getDoc(userDocRef);
-	
-		  if (userDocSnapshot.exists()) {
-			// Document exists, update it
-			await updateDoc(userDocRef, {
-			  points: increment(1) // Increment the points field by 1
-			});
-			console.log(`Updated scoreboard for ${username}`);
-		  } else {
-			// Document doesn't exist, create a new one
-			await setDoc(userDocRef, {
-				points: 1 // Initialize the points field
-			});
-			console.log(`Created new scoreboard emtry for ${username}`);
-		  }
-		}
-	  } catch (error) {
+        for (const username of userList) {
+            const userDocRef = doc(scoreRef, username);
+
+            const userDocSnapshot = await getDoc(userDocRef);
+
+            if (userDocSnapshot.exists()) {
+                // Document exists, update it
+                const pointsIncrement = {
+                    points: increment(1) // Increment the points field by 1
+                };
+
+                // Retrieve the user's guessed vote object
+                const gameDocumentRef = doc(collection(db, 'Games'), messageId);
+                const votesCollectionRef = collection(gameDocumentRef, 'Votes');
+                const userVoteDocRef = doc(votesCollectionRef, username);
+
+                const userVoteDocSnapshot = await getDoc(userVoteDocRef);
+
+                if (userVoteDocSnapshot.exists()) {
+                    const voteObj = userVoteDocSnapshot.data();
+                    const guessedGames = voteObj.numberOfGames;
+                    const actualGames = games;
+
+                    if (guessedGames === actualGames) {
+                        pointsIncrement.points = increment(2); // Increment by 2 points if guessed both correctly
+                    }
+                }
+
+                await updateDoc(userDocRef, pointsIncrement);
+                console.log(`Updated scoreboard for ${username}`);
+            } else {
+                // Document doesn't exist, create a new one
+                await setDoc(userDocRef, {
+                    points: 1 // Initialize the points field
+                });
+                console.log(`Created new scoreboard entry for ${username}`);
+            }
+        }
+    } catch (error) {
 		console.error('Error updating scoreboard:', error);
 	  }
 }
