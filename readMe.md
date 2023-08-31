@@ -2,7 +2,7 @@
 
 ## Setting up the bot
 
-Clone the bot into your local repo and run ```npm install```
+Obtain the config.json and firbaseConfig.js files from a current admin. Then clone the bot into your local repo, add both config files to the top level of the project and run ```npm install```.
 
 ## Running the bot
 
