@@ -27,10 +27,10 @@ async function seriesVote(series, username, messageID) {
 	});
 }
 
-async function addGame(team1, team2, messageID) {
+async function addGame(team1, team2, series, messageID) {
 	data = {
 		result: 'pending',
-		numberOfGames: 3,
+		numberOfGames: series,
 		team1: team1,
 		team2: team2
 	}

@@ -121,7 +121,7 @@ module.exports = {
              components: [row],
          });
 
-         await addGame(team1, team2, message2.id);
+         await addGame(team1, team2, series, message2.id);
 
          const collector = message2.createMessageComponentCollector({ componentType: ComponentType.Button, time: 60000 });
 
@@ -134,7 +134,7 @@ module.exports = {
                 })
              } else if (i.customId === 'team2Button') {
                  team = team2;
-                 await castVote(team, i.user.username, 3, i.message.id).then(() => {
+                 await castVote(team, i.user.username, i.message.id).then(() => {
                     client.users.cache.get(i.user.id).send(`${i.user.username} voted for ${team}!`);
                 })
              } else if (i.customId === 'button2') {
