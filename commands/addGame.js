@@ -127,33 +127,38 @@ module.exports = {
 
          collector.on('collect', async i => {
              let team = '';
-             if (i.customId === 'team1Button') {
-                 team = team1;
-                 await castVote(team, i.user.username, i.message.id).then(() => {
-                    client.users.cache.get(i.user.id).send(`${i.user.username} voted for ${team}!`);
-                })
-             } else if (i.customId === 'team2Button') {
-                 team = team2;
-                 await castVote(team, i.user.username, i.message.id).then(() => {
-                    client.users.cache.get(i.user.id).send(`${i.user.username} voted for ${team}!`);
-                })
-             } else if (i.customId === 'button2') {
-                await seriesVote('2', i.user.username, i.message.id).then(() => {
-                    client.users.cache.get(i.user.id).send(`${i.user.username} voted for 2 games in the series!`);
-                })
-             } else if (i.customId === 'button3') {
-                await seriesVote('3', i.user.username, i.message.id).then(() => {
-                    client.users.cache.get(i.user.id).send(`${i.user.username} voted for 3 games in the series!`);
-                })
-             } else if (i.customId === 'button4') {
-                await seriesVote('4', i.user.username, i.message.id).then(() => {
-                    client.users.cache.get(i.user.id).send(`${i.user.username} voted for 4 games in the series!`);
-                })
-             } else if (i.customId === 'button5') {
-                await seriesVote('5', i.user.username, i.message.id).then(() => {
-                    client.users.cache.get(i.user.id).send(`${i.user.username} voted for 5 games in the series!`);
-                })
-             }
+             try {
+                if (i.customId === 'team1Button') {
+                    team = team1;
+                    await castVote(team, i.user.username, i.message.id).then(() => {
+                        i.reply({ content: "Vote for " + team1Info.Emoji + " submitted.", ephemeral: true });
+                    })
+                } else if (i.customId === 'team2Button') {
+                    team = team2;
+                    await castVote(team, i.user.username, i.message.id).then(() => {
+                        i.reply({ content: "Vote for " + team2Info.Emoji + " submitted.", ephemeral: true });
+                    })
+                } else if (i.customId === 'button2') {
+                    await seriesVote('2', i.user.username, i.message.id).then(() => {
+                        i.reply({ content: "Vote 2 games submitted.", ephemeral: true });
+                    })
+                } else if (i.customId === 'button3') {
+                    await seriesVote('3', i.user.username, i.message.id).then(() => {
+                        i.reply({ content: "Vote 3 games submitted.", ephemeral: true });
+                    })
+                } else if (i.customId === 'button4') {
+                    await seriesVote('4', i.user.username, i.message.id).then(() => {
+                        i.reply({ content: "Vote 4 gmames submitted.", ephemeral: true });
+                    })
+                } else if (i.customId === 'button5') {
+                    await seriesVote('5', i.user.username, i.message.id).then(() => {
+                        i.reply({ content: "Vote 5 games submitted.", ephemeral: true });
+                    })
+                }
+            } catch (error) {
+                // If there is an error while casting a vote, reply with the error message
+                i.reply({ content: "An error occurred: " + error.message, ephemeral: true });
+            }
          });
          collectorMap.set(message2.id, collector);
 	},
