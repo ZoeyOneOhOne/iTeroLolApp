@@ -140,24 +140,24 @@ module.exports = {
                     })
                 } else if (i.customId === 'button2') {
                     await seriesVote('2', i.user.username, i.message.id).then(() => {
-                        i.reply({ content: "Vote 2 games submitted.", ephemeral: true });
+                        i.reply({ content: "Vote for 2 games submitted.", ephemeral: true });
                     })
                 } else if (i.customId === 'button3') {
                     await seriesVote('3', i.user.username, i.message.id).then(() => {
-                        i.reply({ content: "Vote 3 games submitted.", ephemeral: true });
+                        i.reply({ content: "Vote for 3 games submitted.", ephemeral: true });
                     })
                 } else if (i.customId === 'button4') {
                     await seriesVote('4', i.user.username, i.message.id).then(() => {
-                        i.reply({ content: "Vote 4 gmames submitted.", ephemeral: true });
+                        i.reply({ content: "Vote for 4 games submitted.", ephemeral: true });
                     })
                 } else if (i.customId === 'button5') {
                     await seriesVote('5', i.user.username, i.message.id).then(() => {
-                        i.reply({ content: "Vote 5 games submitted.", ephemeral: true });
+                        i.reply({ content: "Vote for 5 games submitted.", ephemeral: true });
                     })
                 }
             } catch (error) {
                 // If there is an error while casting a vote, reply with the error message
-                i.reply({ content: "An error occurred: " + error.message, ephemeral: true });
+                i.reply({ content: "An error occurred: " + error.message + "\n" + "\nPlease try again.", ephemeral: true });
             }
          });
          collectorMap.set(message2.id, collector);
