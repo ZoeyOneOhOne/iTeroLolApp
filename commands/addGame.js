@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ComponentType } = require('discord.js');
 const { Client, GatewayIntentBits } = require('discord.js');
 const { token } = require('../config.json');
-const { getTeams, castVote, addGame, seriesVote } = require('../db');
+const { getTeams, castVote, addGame, seriesVote, logError } = require('../db');
 const { collectorMap } = require('../collectorManager');
 
 // Create a new client instance
@@ -195,6 +195,7 @@ module.exports = {
                 } else {
                     // If it's any other error, reply with the error message
                     i.reply({ content: "An error occurred: " + error.message + "\n" + "\nPlease try again.", ephemeral: true });
+                    logError(error, error.message, 'ZoeyOneOhOne');
                 }
             }
          });

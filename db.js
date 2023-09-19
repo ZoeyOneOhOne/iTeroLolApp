@@ -48,12 +48,10 @@ async function reportGame(result, messageId, games) {
 
 	try {
 		await updateDoc(docRef, updateData);
-		console.log('Game reported successfully');
-
 		const userList = await getUsersWhoVotedCorrectly(messageId, result);
 		await updateScoreboard(userList, messageId, games);
 	} catch (error) {
-		console.error('Error reporting game:', error);
+		logError(error, error.message, 'ZoeyOneOhOne', 'Error reportin game.');
 	}
 }
 
@@ -69,11 +67,10 @@ async function getUsersWhoVotedCorrectly(messageId, winner) {
 		  const querySnapshot = await getDocs(queryVotedFor);
 	
 		  const usernames = querySnapshot.docs.map(doc => doc.id);
-		  console.log('Usernames with matching votedFor value:', usernames);
 		  
 		  resolve(usernames);
 		} catch (error) {
-		  console.error('Error querying documents:', error);
+		  logError(error, error.message, 'ZoeyOneOhOne', 'Error while getting users who voted correctly.');
 		  reject(error);
 		}
 	  });
@@ -110,16 +107,30 @@ async function updateScoreboard(userList, messageId, games) {
             if (userDocSnapshot.exists()) {
                 // Document exists, update it
                 await updateDoc(userDocRef, pointsIncrement);
-                console.log(`Updated scoreboard for ${username}`);
             } else {
                 // Document doesn't exist, create a new one
                 await setDoc(userDocRef, pointsIncrement);
-                console.log(`Created new scoreboard entry for ${username}`);
             }
         }
     } catch (error) {
-        console.error('Error updating scoreboard:', error);
+		logError(error, error.message, 'ZoeyOneOhOne', 'Error updating scoreboard.')
     }
+}
+
+async function logError(error, message, user, description) {
+	const today = new Date();
+	const formattedDate = today.toLocaleDateString(); // e.g., "09/18/2023" (format may vary depending on your system's locale)
+
+	data = {
+		date: formattedDate,
+		error: error,
+		message: message,
+		user: user,
+		status: 'Open',
+		description: description
+	}
+	const errorDocRef = doc(db, `ErrorLog`);
+	await setDoc(errorDocRef, data);
 }
 
 exports.getTeams = getTeams;
@@ -127,3 +138,4 @@ exports.castVote = castVote;
 exports.addGame = addGame;
 exports.seriesVote = seriesVote;
 exports.reportGame = reportGame;
+exports.logError = logError;
