@@ -80,50 +80,46 @@ async function getUsersWhoVotedCorrectly(messageId, winner) {
 }
 
 async function updateScoreboard(userList, messageId, games) {
-	const scoreRef = collection(db, 'Scoreboard');
+    const scoreRef = collection(db, 'Scoreboard');
 
-	try {
+    try {
         for (const username of userList) {
             const userDocRef = doc(scoreRef, username);
-
             const userDocSnapshot = await getDoc(userDocRef);
+
+            const pointsIncrement = {
+                points: increment(1) // Increment the points field by 1
+            };
+
+            // Retrieve the user's guessed vote object
+            const gameDocumentRef = doc(collection(db, 'Games'), messageId);
+            const votesCollectionRef = collection(gameDocumentRef, 'Votes');
+            const userVoteDocRef = doc(votesCollectionRef, username);
+            const userVoteDocSnapshot = await getDoc(userVoteDocRef);
+
+            if (userVoteDocSnapshot.exists()) {
+                const voteObj = userVoteDocSnapshot.data();
+                const guessedGames = voteObj.numberOfGames;
+                const actualGames = games;
+
+                if (guessedGames === actualGames) {
+                    pointsIncrement.points = increment(2); // Increment by 2 points if guessed both correctly
+                }
+            }
 
             if (userDocSnapshot.exists()) {
                 // Document exists, update it
-                const pointsIncrement = {
-                    points: increment(1) // Increment the points field by 1
-                };
-
-                // Retrieve the user's guessed vote object
-                const gameDocumentRef = doc(collection(db, 'Games'), messageId);
-                const votesCollectionRef = collection(gameDocumentRef, 'Votes');
-                const userVoteDocRef = doc(votesCollectionRef, username);
-
-                const userVoteDocSnapshot = await getDoc(userVoteDocRef);
-
-                if (userVoteDocSnapshot.exists()) {
-                    const voteObj = userVoteDocSnapshot.data();
-                    const guessedGames = voteObj.numberOfGames;
-                    const actualGames = games;
-
-                    if (guessedGames === actualGames) {
-                        pointsIncrement.points = increment(2); // Increment by 2 points if guessed both correctly
-                    }
-                }
-
                 await updateDoc(userDocRef, pointsIncrement);
                 console.log(`Updated scoreboard for ${username}`);
             } else {
                 // Document doesn't exist, create a new one
-                await setDoc(userDocRef, {
-                    points: 1 // Initialize the points field
-                });
+                await setDoc(userDocRef, pointsIncrement);
                 console.log(`Created new scoreboard entry for ${username}`);
             }
         }
     } catch (error) {
-		console.error('Error updating scoreboard:', error);
-	  }
+        console.error('Error updating scoreboard:', error);
+    }
 }
 
 exports.getTeams = getTeams;
