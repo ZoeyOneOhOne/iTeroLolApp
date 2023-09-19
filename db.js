@@ -6,7 +6,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app)
 
 async function getTeams() {
-	const teamcol = collection(db, 'TeamList');
+	const teamcol = collection(db, 'TeamListWorlds');
 	const teams = await getDocs(teamcol);
 	const teamlist = teams.docs.map(doc => doc.data());
 	return teamlist;
