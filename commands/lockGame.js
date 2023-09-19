@@ -13,12 +13,12 @@ module.exports = {
 		.setName('lockgame')
 		.setDescription('Locks a game by a given id')
         .addStringOption(option => 
-            option.setName('input')
+            option.setName('message-id')
                 .setDescription('Message ID')
                 .setRequired(true)
         ),
         async execute(interaction) {
-            const messageId = interaction.options.getString('input'); 
+            const messageId = interaction.options.getString('message-id'); 
 
             // Retrieve the collector from the map
             const collector = collectorMap.get(messageId);

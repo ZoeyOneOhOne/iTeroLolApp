@@ -7,7 +7,7 @@ module.exports = {
 		.setName('reportgame')
 		.setDescription('Report the result of a game.')
         .addStringOption(option => 
-            option.setName('input')
+            option.setName('message-id')
                 .setDescription('Message ID')
                 .setRequired(true)
         )
@@ -52,7 +52,7 @@ module.exports = {
                     { name: '5', value: '5'},
                 )),
 	async execute(interaction) {
-        const messageId = interaction.options.getString('input'); 
+        const messageId = interaction.options.getString('message-id'); 
         const winner = interaction.options.getString('winner'); 
         const games = interaction.options.getString('games');
 
