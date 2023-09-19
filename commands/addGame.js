@@ -188,8 +188,14 @@ module.exports = {
                     })
                 }
             } catch (error) {
-                // If there is an error while casting a vote, reply with the error message
-                i.reply({ content: "An error occurred: " + error.message + "\n" + "\nPlease try again.", ephemeral: true });
+                // Check if the error message contains "No document to update"
+                if (error.message.includes("No document to update")) {
+                    // If it does, reply with a custom message
+                    i.reply({ content: "You ned to vote for a team first.", ephemeral: true });
+                } else {
+                    // If it's any other error, reply with the error message
+                    i.reply({ content: "An error occurred: " + error.message + "\n" + "\nPlease try again.", ephemeral: true });
+                }
             }
          });
          collectorMap.set(message2.id, collector);
