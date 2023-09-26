@@ -19,14 +19,6 @@ module.exports = {
         ),
         async execute(interaction) {
             const messageId = interaction.options.getString('message-id'); 
-
-            // Retrieve the collector from the map
-            const collector = collectorMap.get(messageId);
-            if (collector) {
-                // Stop the collector and remove it from the map
-                collector.stop();
-                // collectorMap.delete(messageId);
-
                  try {
                     const targetChannel = client.channels.cache.get('1077612967639666738');
                     if (!targetChannel) {
@@ -34,8 +26,12 @@ module.exports = {
                         return;
                     }
 
+                    console.log(messageId);
+
                     // Fetch the message by its ID
                     const message = await targetChannel.messages.fetch(messageId);
+
+                    console.log(message);
                 
                     if (message) {
                         // Edit the message content to add "(locked)"
@@ -48,8 +44,5 @@ module.exports = {
                     console.error(error);
                     await interaction.reply('An error occurred while locking the game and updating the message.');
                 }
-            } else {
-                await interaction.reply('Game not found.');
-            }
         },
 };
