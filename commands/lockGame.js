@@ -1,5 +1,4 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { collectorMap } = require('../collectorManager');
 const { Client, GatewayIntentBits } = require('discord.js');
 const { token } = require('../config.json');
 
