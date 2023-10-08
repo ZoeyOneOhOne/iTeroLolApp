@@ -147,7 +147,7 @@ module.exports = {
             row.addComponents(button3, button4, button5);
         }
 
-         const message2 = await client.channels.cache.get('1077612967639666738').send({
+         const message2 = await client.channels.cache.get('841678523286814742').send({
              content: teamMessage1 + ' vs ' + teamMessage2,
              components: [row],
          });
@@ -157,7 +157,7 @@ module.exports = {
          // Send the message and add buttons
          await interaction.reply({content: 'Game posted.' + team1Info.Emoji + ' ' + team2Info.Emoji + ' : ' + message2.id, fetchReply: true});
 
-         const collector = message2.createMessageComponentCollector({ componentType: ComponentType.Button, time: 60000 });
+         const collector = message2.createMessageComponentCollector({ componentType: ComponentType.Button, time: 172800000 });
 
          collectorMap.set(message2.id, collector);
 
@@ -196,7 +196,7 @@ module.exports = {
                    // Check if the error message contains "No document to update"
                    if (error.message.includes("No document to update")) {
                        // If it does, reply with a custom message
-                       i.reply({ content: "You ned to vote for a team first.", ephemeral: true });
+                       i.reply({ content: "You need to vote for a team first.", ephemeral: true });
                    } else {
                        // If it's any other error, reply with the error message
                        i.reply({ content: "An error occurred: " + error.message + "\n" + "\nPlease try again.", ephemeral: true });
