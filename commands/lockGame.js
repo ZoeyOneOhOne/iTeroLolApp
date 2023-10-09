@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { Client, GatewayIntentBits } = require('discord.js');
 const { token } = require('../config.json');
+const { logError } = require('../db');
 
 
 // Create a new client instance
@@ -19,18 +20,15 @@ module.exports = {
         async execute(interaction) {
             const messageId = interaction.options.getString('message-id'); 
                  try {
-                    const targetChannel = client.channels.cache.get('1077612967639666738');
+                    // const targetChannel = client.channels.cache.get('1077612967639666738'); // bot set up
+                    const targetChannel = client.channels.cache.get('841678523286814742'); // pro play spoilers
                     if (!targetChannel) {
                         await interaction.reply('Target channel not found.');
                         return;
                     }
 
-                    console.log(messageId);
-
                     // Fetch the message by its ID
                     const message = await targetChannel.messages.fetch(messageId);
-
-                    console.log(message);
                 
                     if (message) {
                         // Edit the message content to add "(locked)"
@@ -42,6 +40,7 @@ module.exports = {
                 } catch (error) {
                     console.error(error);
                     await interaction.reply('An error occurred while locking the game and updating the message.');
+                    logError(error, messageId, '', 'An error occured while attempting to lock the game with the messageID: ' + messageId)
                 }
         },
 };

@@ -51,17 +51,3 @@ client.on(Events.InteractionCreate, async interaction => {
 client.once(Events.ClientReady, c => {
 	console.log(`Ready! Logged in as ${c.user.tag}`);
 });
-
-// TODO: OCT: 10th deadline
-
-//2.) Kick bot and re-add so Collin can change name and pic.
-
-//4.) Scoreboard
-
-//5.) Consolidate teamsList properties
-
-//7.) When game locks edit the message and say locked
-
-//9.) Changing vote isn't working super well
-
-//10.) If you vote on a number before a team it breaks
