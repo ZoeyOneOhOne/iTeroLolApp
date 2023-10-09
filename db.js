@@ -117,6 +117,53 @@ async function updateScoreboard(userList, messageId, games) {
     }
 }
 
+async function getTeamEmoji(messageId, vote) {
+	const gameCol = collection(db, 'Games');
+	const gameDoc = await getDoc(doc(gameCol, messageId));
+	let team = '';
+
+	if (gameDoc.exists()) {
+		if (vote === 'team1Button') {
+			team = gameDoc.data().team1;
+		} else if (vote === 'team2Button') {
+			team = gameDoc.data().team2;
+		}
+	} else {
+		console.log('Game not found.');
+	}
+
+	const teamCollection = collection(db, 'TeamListWorlds');
+    const q = query(teamCollection, where('Name', '==', team));
+    const querySnapshot = await getDocs(q);
+
+	if (querySnapshot.empty) {
+		return null;
+	}
+
+	// Initialize an array to store the Emoji values
+	const emojis = [];
+
+	const teamArray = [];
+
+	querySnapshot.forEach((doc) => {
+		const data = doc.data();
+		const emoji = data.Emoji;
+
+		const teamObj = {
+			name: data.Name,
+			emoji: data.Emoji
+		}
+		teamArray.push(teamObj);
+
+		if (emoji) {
+			emojis.push(emoji);
+		}
+	});
+
+	const teamEmoji = emojis[0];
+	return teamArray[0];
+}
+
 async function logError(error, message, user, description) {
 	const today = new Date();
 	const formattedDate = today.toLocaleDateString(); // e.g., "09/18/2023" (format may vary depending on your system's locale)
@@ -139,3 +186,4 @@ exports.addGame = addGame;
 exports.seriesVote = seriesVote;
 exports.reportGame = reportGame;
 exports.logError = logError;
+exports.getTeamEmoji = getTeamEmoji;

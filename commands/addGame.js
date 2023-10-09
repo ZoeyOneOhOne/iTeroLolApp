@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ComponentType } = require('discord.js');
 const { Client, GatewayIntentBits } = require('discord.js');
 const { token } = require('../config.json');
-const { getTeams, castVote, addGame, seriesVote, logError } = require('../db');
+const { getTeams, castVote, addGame, seriesVote, logError, getTeamEmoji } = require('../db');
 
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions] });
@@ -147,7 +147,7 @@ module.exports = {
             row.addComponents(button3, button4, button5);
         }
 
-         const message2 = await client.channels.cache.get('841678523286814742').send({
+         const message2 = await client.channels.cache.get('1077612967639666738').send({
              content: teamMessage1 + ' vs ' + teamMessage2,
              components: [row],
          });
@@ -161,49 +161,37 @@ module.exports = {
 
          collectorMap.set(message2.id, collector);
 
-          for (const [key, value] of collectorMap) {
-            value.on('collect', async i => {
-                let team = '';
-                try {
-                   if (i.customId === 'team1Button') {
-                       team = team1;
-                       await castVote(team, i.user.username, i.message.id).then(() => {
-                           i.reply({ content: "Vote for " + team1Info.Emoji + " submitted.", ephemeral: true });
-                       })
-                   } else if (i.customId === 'team2Button') {
-                       team = team2;
-                       await castVote(team, i.user.username, i.message.id).then(() => {
-                           i.reply({ content: "Vote for " + team2Info.Emoji + " submitted.", ephemeral: true });
-                       })
-                   } else if (i.customId === 'button2') {
-                       await seriesVote('2', i.user.username, i.message.id).then(() => {
-                           i.reply({ content: "Vote for 2 games submitted.", ephemeral: true });
-                       })
-                   } else if (i.customId === 'button3') {
-                       await seriesVote('3', i.user.username, i.message.id).then(() => {
-                           i.reply({ content: "Vote for 3 games submitted.", ephemeral: true });
-                       })
-                   } else if (i.customId === 'button4') {
-                       await seriesVote('4', i.user.username, i.message.id).then(() => {
-                           i.reply({ content: "Vote for 4 games submitted.", ephemeral: true });
-                       })
-                   } else if (i.customId === 'button5') {
-                       await seriesVote('5', i.user.username, i.message.id).then(() => {
-                           i.reply({ content: "Vote for 5 games submitted.", ephemeral: true });
-                       })
-                   }
-               } catch (error) {
-                   // Check if the error message contains "No document to update"
-                   if (error.message.includes("No document to update")) {
-                       // If it does, reply with a custom message
-                       i.reply({ content: "You need to vote for a team first.", ephemeral: true });
-                   } else {
-                       // If it's any other error, reply with the error message
-                       i.reply({ content: "An error occurred: " + error.message + "\n" + "\nPlease try again.", ephemeral: true });
-                       logError(error, error.message, 'ZoeyOneOhOne');
-                   }
-               }
-            });
-          }
+         collector.on('collect', async i => {
+            // Get the collector associated with the message using message ID
+            const messageCollector = collectorMap.get(i.message.id);
+
+            if (i.customId === 'team1Button') {
+                const team = await getTeamEmoji(i.message.id, 'team1Button');
+                await castVote(team.name, i.user.username, i.message.id).then(() => {
+                    i.reply({ content: "Vote for " + team.emoji + " submitted.", ephemeral: true });
+                })
+            } else if (i.customId === 'team2Button') {
+                const team = await getTeamEmoji(i.message.id, 'team2Button');
+                await castVote(team.name, i.user.username, i.message.id).then(() => {
+                    i.reply({ content: "Vote for " + team.emoji + " submitted.", ephemeral: true });
+                })
+            } else if (i.customId === 'button2') {
+                await seriesVote('2', i.user.username, i.message.id).then(() => {
+                    i.reply({ content: "Vote for 2 games submitted.", ephemeral: true });
+                })
+            } else if (i.customId === 'button3') {
+                await seriesVote('3', i.user.username, i.message.id).then(() => {
+                    i.reply({ content: "Vote for 3 games submitted.", ephemeral: true });
+                })
+            } else if (i.customId === 'button4') {
+                await seriesVote('4', i.user.username, i.message.id).then(() => {
+                    i.reply({ content: "Vote for 4 games submitted.", ephemeral: true });
+                })
+            } else if (i.customId === 'button5') {
+                await seriesVote('5', i.user.username, i.message.id).then(() => {
+                    i.reply({ content: "Vote for 5 games submitted.", ephemeral: true });
+                })
+            }
+        });
 	},
 };
