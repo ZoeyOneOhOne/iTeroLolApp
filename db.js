@@ -140,9 +140,6 @@ async function getTeamEmoji(messageId, vote) {
 		return null;
 	}
 
-	// Initialize an array to store the Emoji values
-	const emojis = [];
-
 	const teamArray = [];
 
 	querySnapshot.forEach((doc) => {
@@ -154,13 +151,8 @@ async function getTeamEmoji(messageId, vote) {
 			emoji: data.Emoji
 		}
 		teamArray.push(teamObj);
-
-		if (emoji) {
-			emojis.push(emoji);
-		}
 	});
 
-	const teamEmoji = emojis[0];
 	return teamArray[0];
 }
 
