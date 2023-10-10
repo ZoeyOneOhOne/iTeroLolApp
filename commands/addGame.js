@@ -147,7 +147,7 @@ module.exports = {
             row.addComponents(button3, button4, button5);
         }
 
-         const message2 = await client.channels.cache.get('1077612967639666738').send({
+         const message2 = await client.channels.cache.get('841678523286814742').send({
              content: teamMessage1 + ' vs ' + teamMessage2,
              components: [row],
          });

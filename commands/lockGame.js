@@ -20,8 +20,8 @@ module.exports = {
         async execute(interaction) {
             const messageId = interaction.options.getString('message-id'); 
                  try {
-                    const targetChannel = client.channels.cache.get('1077612967639666738'); // bot set up
-                    //const targetChannel = client.channels.cache.get('841678523286814742'); // pro play spoilers
+                    //const targetChannel = client.channels.cache.get('1077612967639666738'); // bot set up
+                    const targetChannel = client.channels.cache.get('841678523286814742'); // pro play spoilers
                     if (!targetChannel) {
                         await interaction.reply('Target channel not found.');
                         return;
