@@ -58,7 +58,12 @@ module.exports = {
 
         await reportGame(winner, messageId, games);
 
-
+        // Check if the interaction is still valid
+        if (interaction.replied) {
+        // Interaction has already been replied to
+        console.log('Interaction has already been replied to');
+        return;
+        }
 
         await interaction.reply(winner + ' won '+ games +' games in the series.');
 	},
