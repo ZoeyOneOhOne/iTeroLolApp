@@ -165,6 +165,8 @@ module.exports = {
             // Get the collector associated with the message using message ID
             const messageCollector = collectorMap.get(i.message.id);
 
+            try {
+        
             if (i.customId === 'team1Button') {
                 const team = await getTeamEmoji(i.message.id, 'team1Button');
                 await castVote(team.name, i.user.username, i.message.id).then(() => {
@@ -192,6 +194,14 @@ module.exports = {
                     i.reply({ content: "Vote for 5 games submitted.", ephemeral: true });
                 })
             }
+
+        } catch (error) {
+            console.error("Button interaction error:", error);
+            console.log("Interaction Object:", i);
+            console.log("Button interaction user: ", i.user.username);
+            console.log("Button interaction messageID: ", i.message.id);
+            logError(error, i.message.id, i.user.username, 'Button interaction error: ' + i);
+        }
         });
 	},
 };
