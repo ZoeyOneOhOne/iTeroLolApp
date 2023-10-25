@@ -56,7 +56,13 @@ module.exports = {
         const winner = interaction.options.getString('winner'); 
         const games = interaction.options.getString('games');
 
-        await reportGame(winner, messageId, games);
+        try {
+            await reportGame(winner, messageId, games);
+        } catch (error) {
+            console.error(error);
+            await interaction.reply('An error occurred while reporting the game.');
+            logError(error, messageId, '', 'An error occured while attempting to report the game with the messageID: ' + messageId);
+        }
 
         // Check if the interaction is still valid
         if (interaction.replied) {
