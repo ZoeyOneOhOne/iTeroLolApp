@@ -3,7 +3,6 @@ const { Client, GatewayIntentBits } = require('discord.js');
 const { token } = require('../config.json');
 const { logError } = require('../db');
 
-
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions] });
 client.login(token);
@@ -41,7 +40,7 @@ module.exports = {
                 } catch (error) {
                     console.error(error);
                     await interaction.reply('An error occurred while locking the game and updating the message.');
-                    logError(error, messageId, '', 'An error occured while attempting to lock the game with the messageID: ' + messageId)
+                    logError(error, messageId, '', 'An error occured while attempting to lock the game with the messageID: ' + messageId);
                 }
         },
 };

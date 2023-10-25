@@ -157,6 +157,7 @@ async function getTeamEmoji(messageId, vote) {
 }
 
 async function logError(error, message, user, description) {
+	try {
 	const today = new Date();
 	const formattedDate = today.toLocaleDateString(); // e.g., "09/18/2023" (format may vary depending on your system's locale)
 
@@ -170,6 +171,9 @@ async function logError(error, message, user, description) {
 	}
 	const errorDocRef = doc(db, `ErrorLog`);
 	await setDoc(errorDocRef, data);
+} catch (error) {
+	console.error('An error occurred in logError:', error);
+}
 }
 
 exports.getTeams = getTeams;
