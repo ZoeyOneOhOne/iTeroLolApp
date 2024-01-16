@@ -1,17 +1,26 @@
 const { SlashCommandBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ComponentType } = require('discord.js');
-const { Client, GatewayIntentBits } = require('discord.js');
-const { token } = require('../config.json');
 const { getTeams, castVote, addGame, seriesVote, logError, getTeamEmoji } = require('../db');
-
-// Create a new client instance
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions] });
-client.login(token);
-
-const collectorMap = new Map();
 
 // Set up roles
 // const acceptedRoles = ['Founder', 'The Board', 'Community Manager', 'Staff', 'Deputy Mods', 'BotMaster'];
 // const acceptedRoleIDs = ['761266506235379712', '761266861115441162', '1004747752980353084', '1029408764899635211', '1061776397091209387', '1077611324793688094'];
+
+const collectorMap = new Map();
+
+// Function to create series buttons
+function createSeriesButtons(series) {
+    const buttons = [];
+
+    for (let i = 2; i <= series; i++) {
+        buttons.push(new ButtonBuilder()
+            .setCustomId(`button${i}`)
+            .setStyle(ButtonStyle.Secondary)
+            .setEmoji(`${i}️⃣`)
+        );
+    }
+
+    return buttons;
+}
 
 
 module.exports = {
@@ -114,40 +123,7 @@ module.exports = {
         const row = new ActionRowBuilder()
         .addComponents(team1Button, team2Button);
 
-        // Build button for series
-
-        if(series === '3') {
-            const button2 = new ButtonBuilder()
-			.setCustomId('button2')
-			.setStyle(ButtonStyle.Secondary)
-            .setEmoji("2️⃣");
-
-            const button3 = new ButtonBuilder()
-                .setCustomId('button3')
-                .setStyle(ButtonStyle.Secondary)
-                .setEmoji("3️⃣");
-            
-            row.addComponents(button2, button3);
-        } else if (series === '5') {
-            const button3 = new ButtonBuilder()
-                .setCustomId('button3')
-                .setStyle(ButtonStyle.Secondary)
-                .setEmoji("3️⃣");
-
-            const button4 = new ButtonBuilder()
-                .setCustomId('button4')
-                .setStyle(ButtonStyle.Secondary)
-                .setEmoji("4️⃣");
-
-            const button5 = new ButtonBuilder()
-                .setCustomId('button5')
-                .setStyle(ButtonStyle.Secondary)
-                .setEmoji("5️⃣");
-
-            row.addComponents(button3, button4, button5);
-        }
-
-         const message2 = await client.channels.cache.get('1162487828417085650').send({
+         const message2 = await interaction.client.channels.cache.get('1162487828417085650').send({
              content: teamMessage1 + ' vs ' + teamMessage2,
              components: [row],
          });
@@ -161,39 +137,43 @@ module.exports = {
 
          collectorMap.set(message2.id, collector);
 
+
+
          collector.on('collect', async i => {
             // Get the collector associated with the message using message ID
             const messageCollector = collectorMap.get(i.message.id);
 
             try {
         
-            if (i.customId === 'team1Button') {
-                const team = await getTeamEmoji(i.message.id, 'team1Button');
-                await castVote(team.name, i.user.username, i.message.id).then(() => {
-                    i.reply({ content: "Vote for " + team.emoji + " submitted.", ephemeral: true });
-                })
-            } else if (i.customId === 'team2Button') {
-                const team = await getTeamEmoji(i.message.id, 'team2Button');
-                await castVote(team.name, i.user.username, i.message.id).then(() => {
-                    i.reply({ content: "Vote for " + team.emoji + " submitted.", ephemeral: true });
-                })
-            } else if (i.customId === 'button2') {
-                await seriesVote('2', i.user.username, i.message.id).then(() => {
-                    i.reply({ content: "Vote for 2 games submitted.", ephemeral: true });
-                })
-            } else if (i.customId === 'button3') {
-                await seriesVote('3', i.user.username, i.message.id).then(() => {
-                    i.reply({ content: "Vote for 3 games submitted.", ephemeral: true });
-                })
-            } else if (i.customId === 'button4') {
-                await seriesVote('4', i.user.username, i.message.id).then(() => {
-                    i.reply({ content: "Vote for 4 games submitted.", ephemeral: true });
-                })
-            } else if (i.customId === 'button5') {
-                await seriesVote('5', i.user.username, i.message.id).then(() => {
-                    i.reply({ content: "Vote for 5 games submitted.", ephemeral: true });
-                })
-            }
+                if (i.customId === 'team1Button' || i.customId === 'team2Button') {
+
+                    const seriesButtons = createSeriesButtons(parseInt(series));
+                    const seriesRow = new ActionRowBuilder().addComponents(...seriesButtons);
+                    const team = await getTeamEmoji(i.message.id, i.customId);
+    
+                    await castVote(team.name, i.user.username, i.message.id).then(() => {
+                        i.reply({ 
+                            content: "Vote for " + team.emoji + " submitted.", 
+                            components: [seriesRow],
+                            ephemeral: true });
+                    });
+
+                } else if (i.customId.startsWith('button')) {
+                    console.log('We got here');
+                    // Handle series vote when series buttons are clicked
+                    const seriesLength = i.customId.replace('button', ''); // Extract the series length from the customId
+                    console.log(seriesLength);
+                    try {
+                        await seriesVote(seriesLength, i.user.username, i.message.id).then(() => {
+                            i.reply({ 
+                                content: `Vote for ${seriesLength} games submitted.`, 
+                                ephemeral: true });
+                        });
+                    } catch (error) {
+                        console.error("Error submitting series vote:", error);
+                        logError(error, i.message.id, i.user.username, 'Error submitting series vote');
+                    }
+                }
 
         } catch (error) {
             console.error("Button interaction error:", error);

@@ -1,11 +1,4 @@
 const { SlashCommandBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ComponentType } = require('discord.js');
-const wait = require('node:timers/promises').setTimeout;
-const { Client, GatewayIntentBits } = require('discord.js');
-const { token } = require('../config.json');
-
-// Create a new client instance
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions] });
-client.login(token);
 
 const collectorMap = new Map();
 
@@ -26,7 +19,7 @@ module.exports = {
         async execute(interaction) {
             const channelId = '1077612967639666738'; 
         
-            const channel = client.channels.cache.get(channelId);
+            const channel = interaction.client.channels.cache.get(channelId);
         
             if (!channel) {
                 console.error(`Channel with ID ${channelId} not found.`);

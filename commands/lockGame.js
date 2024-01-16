@@ -1,11 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { Client, GatewayIntentBits } = require('discord.js');
-const { token } = require('../config.json');
 const { logError } = require('../db');
-
-// Create a new client instance
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions] });
-client.login(token);
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -19,9 +13,9 @@ module.exports = {
         async execute(interaction) {
             const messageId = interaction.options.getString('message-id'); 
                  try {
-                    //const targetChannel = client.channels.cache.get('1077612967639666738'); // bot set up
-                    const targetChannel = client.channels.cache.get('1162487828417085650'); // No idea 
-                    //const targetChannel = client.channels.cache.get('841678523286814742'); // pro play spoilers
+                    //const targetChannel = interaction.client.channels.cache.get('1077612967639666738'); // bot set up
+                    const targetChannel = interaction.client.channels.cache.get('1162487828417085650'); // No idea 
+                    //const targetChannel = interaction.client.channels.cache.get('841678523286814742'); // pro play spoilers
                     if (!targetChannel) {
                         await interaction.reply('Target channel not found.');
                         return;

@@ -1,6 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { reportGame } = require('../db');
-const wait = require('node:timers/promises').setTimeout;
 const { logError} = require('../db');
 
 module.exports = {
