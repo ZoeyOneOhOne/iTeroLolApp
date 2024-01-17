@@ -5,7 +5,7 @@ const { getTeams, castVote, addGame, seriesVote, logError, getTeamEmoji } = requ
 // const acceptedRoles = ['Founder', 'The Board', 'Community Manager', 'Staff', 'Deputy Mods', 'BotMaster'];
 // const acceptedRoleIDs = ['761266506235379712', '761266861115441162', '1004747752980353084', '1029408764899635211', '1061776397091209387', '1077611324793688094'];
 
-const collectorMap = new Map();
+let currentMessageID = '';
 
 // Function to create series buttons
 function createSeriesButtons(series) {
@@ -133,55 +133,35 @@ module.exports = {
          // Send the message and add buttons
          await interaction.reply({content: 'Game posted.' + team1Info.Emoji + ' ' + team2Info.Emoji + ' : ' + message2.id, fetchReply: true});
 
-         const collector = message2.createMessageComponentCollector({ componentType: ComponentType.Button, time: 172800000 });
-
-         collectorMap.set(message2.id, collector);
-
-
-
-         collector.on('collect', async i => {
-            // Get the collector associated with the message using message ID
-            const messageCollector = collectorMap.get(i.message.id);
+         // Directly handle interactions without using a collector
+        interaction.client.on("interactionCreate", async (i) => {
+            if (!i.isButton()) return;
 
             try {
-        
                 if (i.customId === 'team1Button' || i.customId === 'team2Button') {
-
                     const seriesButtons = createSeriesButtons(parseInt(series));
                     const seriesRow = new ActionRowBuilder().addComponents(...seriesButtons);
                     const team = await getTeamEmoji(i.message.id, i.customId);
-    
-                    await castVote(team.name, i.user.username, i.message.id).then(() => {
-                        i.reply({ 
-                            content: "Vote for " + team.emoji + " submitted.", 
-                            components: [seriesRow],
-                            ephemeral: true });
+
+                    currentMessageID = i.message.id;
+
+                    // Handle team vote
+                    await castVote(team.name, i.user.username, i.message.id);
+                    i.reply({
+                        content: `Vote for ${team.emoji} submitted.\n\nNow vote for the number of series.`,
+                        components: [seriesRow],
+                        ephemeral: true,
                     });
-
                 } else if (i.customId.startsWith('button')) {
-                    console.log('We got here');
-                    // Handle series vote when series buttons are clicked
-                    const seriesLength = i.customId.replace('button', ''); // Extract the series length from the customId
-                    console.log(seriesLength);
-                    try {
-                        await seriesVote(seriesLength, i.user.username, i.message.id).then(() => {
-                            i.reply({ 
-                                content: `Vote for ${seriesLength} games submitted.`, 
-                                ephemeral: true });
-                        });
-                    } catch (error) {
-                        console.error("Error submitting series vote:", error);
-                        logError(error, i.message.id, i.user.username, 'Error submitting series vote');
-                    }
+                    // Handle series vote
+                    const seriesLength = i.customId.replace('button', '');
+                    await seriesVote(seriesLength, i.user.username, currentMessageID);
+                    i.reply({ content: `Vote for ${seriesLength} games submitted.`, ephemeral: true });
                 }
-
-        } catch (error) {
-            console.error("Button interaction error:", error);
-            console.log("Interaction Object:", i);
-            console.log("Button interaction user: ", i.user.username);
-            console.log("Button interaction messageID: ", i.message.id);
-            logError(error, i.message.id, i.user.username, 'Button interaction error: ' + i);
-        }
+            } catch (error) {
+                console.error("Interaction handling error:", error);
+                logError(error, i.message.id, i.user.username, 'Interaction handling error: ' + i);
+            }
         });
 	},
 };

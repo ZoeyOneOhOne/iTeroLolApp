@@ -27,6 +27,16 @@ async function seriesVote(series, username, messageID) {
 	});
 }
 
+async function castVote(team, username, messageID) {
+    const userVoteDocRef = doc(db, `Games/${messageID}/Votes`, username);
+    await setDoc(userVoteDocRef, { votedFor: team });
+}
+
+async function seriesVote(series, username, messageID) {
+    const userVoteDocRef = doc(db, `Games/${messageID}/Votes`, username);
+    await updateDoc(userVoteDocRef, { numberOfGames: series });
+}
+
 async function addGame(team1, team2, series, messageID) {
 	data = {
 		result: 'pending',
