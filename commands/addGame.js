@@ -1,11 +1,14 @@
-const { SlashCommandBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, ComponentType } = require('discord.js');
+const { SlashCommandBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require('discord.js');
 const { getTeams, castVote, addGame, seriesVote, logError, getTeamEmoji } = require('../db');
+const { retryOperation } = require('../retry');
 
 // Set up roles
 // const acceptedRoles = ['Founder', 'The Board', 'Community Manager', 'Staff', 'Deputy Mods', 'BotMaster'];
 // const acceptedRoleIDs = ['761266506235379712', '761266861115441162', '1004747752980353084', '1029408764899635211', '1061776397091209387', '1077611324793688094'];
 
 let currentMessageID = '';
+
+const gameMap = new Map();
 
 // Function to create series buttons
 function createSeriesButtons(series) {
@@ -134,34 +137,49 @@ module.exports = {
          await interaction.reply({content: 'Game posted.' + team1Info.Emoji + ' ' + team2Info.Emoji + ' : ' + message2.id, fetchReply: true});
 
          // Directly handle interactions without using a collector
-        interaction.client.on("interactionCreate", async (i) => {
-            if (!i.isButton()) return;
+        // Directly handle interactions without using a collector
+interaction.client.on("interactionCreate", async (i) => {
+    if (!i.isButton()) return;
 
-            try {
-                if (i.customId === 'team1Button' || i.customId === 'team2Button') {
-                    const seriesButtons = createSeriesButtons(parseInt(series));
-                    const seriesRow = new ActionRowBuilder().addComponents(...seriesButtons);
-                    const team = await getTeamEmoji(i.message.id, i.customId);
+    let team; 
+    let seriesLength;
 
-                    currentMessageID = i.message.id;
+    try {
+        if (i.customId === 'team1Button' || i.customId === 'team2Button') {
+            // Handle team vote with retry mechanism
+            await retryOperation(async () => {
+                team = await getTeamEmoji(i.message.id, i.customId); // Assign value to team variable
+                await castVote(team.name, i.user.username, i.message.id);
+            }, 3); // Retry team vote operation up to 3 times
 
-                    // Handle team vote
-                    await castVote(team.name, i.user.username, i.message.id);
-                    i.reply({
-                        content: `Vote for ${team.emoji} submitted.\n\nNow vote for the number of series.`,
-                        components: [seriesRow],
-                        ephemeral: true,
-                    });
-                } else if (i.customId.startsWith('button')) {
-                    // Handle series vote
-                    const seriesLength = i.customId.replace('button', '');
-                    await seriesVote(seriesLength, i.user.username, currentMessageID);
-                    i.reply({ content: `Vote for ${seriesLength} games submitted.`, ephemeral: true });
-                }
-            } catch (error) {
-                console.error("Interaction handling error:", error);
-                logError(error, i.message.id, i.user.username, 'Interaction handling error: ' + i);
-            }
-        });
+            // Create series buttons
+            const seriesButtons = createSeriesButtons(parseInt(series));
+            const seriesRow = new ActionRowBuilder().addComponents(...seriesButtons);
+
+            // Reply to interaction
+            await i.reply({
+                content: `Vote for ${team.emoji} submitted.\n\nNow vote for the number of series.`,
+                components: series > 1 ? [seriesRow] : [],
+                ephemeral: true,
+            });
+        } else if (i.customId.startsWith('button')) {
+            // Handle series vote with retry mechanism
+            await retryOperation(async () => {
+                const reference = i.message.reference;
+                const originalMessageId = reference ? reference.messageId : i.message.id;
+                seriesLength = i.customId.replace('button', '');
+                await seriesVote(seriesLength, i.user.username, originalMessageId);
+            }, 3); // Retry series vote operation up to 3 times
+
+            // Reply to interaction
+            await i.reply({ content: `Vote for ${seriesLength} games submitted.`, ephemeral: true });
+        }
+    } catch (error) {
+        console.error("Interaction handling error:", error);
+        logError(error, i.message.id, i.user.username, 'Interaction handling error: ' + i);
+    }
+});
+
+
 	},
 };
