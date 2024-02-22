@@ -1,6 +1,6 @@
 const { firebaseConfig } = require('./firebaseConfig');
 const { initializeApp } = require('firebase/app');
-const { getFirestore, collection, getDocs, doc, getDoc, setDoc, updateDoc, query, where, increment } = require('firebase/firestore/lite');
+const { getFirestore, collection, getDocs, doc, getDoc, setDoc, updateDoc, query, where, increment, addDoc } = require('firebase/firestore/lite');
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app)
@@ -27,10 +27,9 @@ async function seriesVote(series, username, messageID) {
 	});
 }
 
-async function addGame(team1, team2, series, messageID) {
+async function addGame(team1, team2, messageID) {
 	data = {
 		result: 'pending',
-		numberOfGames: series,
 		team1: team1,
 		team2: team2
 	}
@@ -94,15 +93,15 @@ async function updateScoreboard(userList, messageId, games) {
             const userVoteDocRef = doc(votesCollectionRef, username);
             const userVoteDocSnapshot = await getDoc(userVoteDocRef);
 
-            if (userVoteDocSnapshot.exists()) {
-                const voteObj = userVoteDocSnapshot.data();
-                const guessedGames = voteObj.numberOfGames;
-                const actualGames = games;
+            // if (userVoteDocSnapshot.exists()) {
+            //     const voteObj = userVoteDocSnapshot.data();
+            //     const guessedGames = voteObj.numberOfGames;
+            //     const actualGames = games;
 
-                if (guessedGames === actualGames) {
-                    pointsIncrement.points = increment(2); // Increment by 2 points if guessed both correctly
-                }
-            }
+            //     if (guessedGames === actualGames) {
+            //         pointsIncrement.points = increment(2); // Increment by 2 points if guessed both correctly
+            //     }
+            // }
 
             if (userDocSnapshot.exists()) {
                 // Document exists, update it
@@ -158,22 +157,23 @@ async function getTeamEmoji(messageId, vote) {
 
 async function logError(error, message, user, description) {
 	try {
-	const today = new Date();
-	const formattedDate = today.toLocaleDateString(); // e.g., "09/18/2023" (format may vary depending on your system's locale)
+		const today = new Date();
+		const formattedDate = today.toLocaleDateString(); // e.g., "09/18/2023" (format may vary depending on your system's locale)
+        const errorString = error instanceof Error ? error.toString() : String(error); // Convert error object to string
 
-	data = {
-		date: formattedDate,
-		error: error,
-		message: message,
-		user: user,
-		status: 'Open',
-		description: description
+		data = {
+			date: formattedDate,
+			error: errorString,
+			message: message,
+			user: user,
+			status: 'Open',
+			description: description
+		}
+		const errorCollectionRef = collection(db, 'ErrorLog');
+		await addDoc(errorCollectionRef, data);
+	} catch (error) {
+		console.error('An error occurred in logError:', error);
 	}
-	const errorDocRef = doc(db, `ErrorLog`);
-	await setDoc(errorDocRef, data);
-} catch (error) {
-	console.error('An error occurred in logError:', error);
-}
 }
 
 exports.getTeams = getTeams;
