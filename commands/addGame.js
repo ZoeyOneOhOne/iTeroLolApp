@@ -116,9 +116,7 @@ module.exports = {
                 if (i.customId === 'team1Button' || i.customId === 'team2Button') {
                     // Handle team vote with retry mechanism
                     await retryOperation(async () => {
-                        console.log(i.message.id, i.customId);
                         team = await getTeamEmoji(i.message.id, i.customId); // Assign value to team variable
-                        console.log(team);
                         await castVote(team.name, i.user.username, i.message.id);
                     }, 3, i.message.id, i.user.username); // Retry team vote operation up to 3 times
 
