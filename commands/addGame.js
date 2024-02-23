@@ -150,7 +150,7 @@ interaction.client.on("interactionCreate", async (i) => {
             await retryOperation(async () => {
                 team = await getTeamEmoji(i.message.id, i.customId); // Assign value to team variable
                 await castVote(team.name, i.user.username, i.message.id);
-            }, 3); // Retry team vote operation up to 3 times
+            }, 3, i.message.id, i.user.username); // Retry team vote operation up to 3 times
 
             // Create series buttons
             const seriesButtons = createSeriesButtons(parseInt(series));
